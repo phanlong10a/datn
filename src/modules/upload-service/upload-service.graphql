@@ -1,0 +1,19 @@
+input FileInput {
+  file: Upload!
+}
+
+scalar Upload
+
+type Query {
+  """
+  @Desc: sayhello
+  """
+  sayhello: String
+}
+
+type Mutation {
+  """
+  @Desc: Upload Image to the server
+  """
+  upload_image(input: FileInput!): String!
+}

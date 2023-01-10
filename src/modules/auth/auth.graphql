@@ -1,0 +1,42 @@
+# input
+input login_facebook_input {
+  access_token: String!
+  fcm: String
+  isLanding: Boolean
+}
+
+input login_google_input {
+  access_token: String!
+  fcm: String
+  isLanding: Boolean
+}
+
+input login_apple_input {
+  access_token: String!
+  fcm: String
+  isLanding: Boolean
+}
+
+#type
+type user_login_response {
+  access_token: String!
+  refresh_token: String!
+  isLoginBefore: Boolean!
+}
+
+type refresh_token_output {
+  token: String!
+  refresh_token: String!
+}
+
+#mutaion
+type Mutation {
+  login_facebook(input: login_facebook_input!): user_login_response!
+  login_google(input: login_google_input!): user_login_response!
+  login_apple(input: login_apple_input!): user_login_response!
+  login_facebook_landing(input: login_facebook_input!): user_login_response!
+  login_google_landing(input: login_google_input!): user_login_response!
+  refresh_token(input: String, type: Int): refresh_token_output!
+  test(a: String): String!
+  user_log_out: String
+}

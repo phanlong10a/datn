@@ -1,0 +1,24 @@
+version: '3.4'
+
+services:
+  postgres:
+    container_name: backend
+    image: postgres:12-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+  redis:
+    image: 'redis:alpine'
+    container_name: redis-mb
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+volumes:
+  postgres:
+  redis_data:

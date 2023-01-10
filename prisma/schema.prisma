@@ -1,0 +1,98 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["interactiveTransactions", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum ROLE {
+  ADMIN
+  STAFF
+  EDITOR
+}
+
+model user {
+  id                 String         @id @default(uuid())
+  email              String?
+  phone              String?
+  avatar             String?
+  fullName           String?
+  password           String?
+  resetPasswordToken String?
+  role               ROLE
+  address            String?
+  staffCode          String?        @unique
+  dateOfBirth        String?
+  position           position?      @relation(fields: [positionId], references: [id], onDelete: SetNull)
+  department         department?    @relation(fields: [departmentId], references: [id], onDelete: SetNull)
+  status             Boolean        @default(true)
+  positionId         String?
+  departmentId       String?
+  created_at         DateTime       @default(now())
+  updated_at         DateTime       @updatedAt
+  deleted            Boolean        @default(false)
+  dependent_person   Int            @default(0)
+  checkin_logs       checkin_logs[]
+}
+
+model position {
+  id                      String   @id @default(uuid())
+  cost_salary             Float
+  bonus_salary            Float
+  name                    String
+  is_insurance            Boolean
+  total_insurance_percent Float    @default(10.5)
+  bhxh_insurance_percent  Float    @default(8)
+  bhyt_insurance_percent  Float    @default(1.5)
+  bhtn_insurance_percent  Float    @default(1)
+  user                    user[]
+  created_at              DateTime @default(now())
+  updated_at              DateTime @updatedAt
+}
+
+model department {
+  id         String   @id @default(uuid())
+  name       String
+  user       user[]
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model policy {
+  id         String   @id @default(uuid())
+  title      String?
+  content    String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model news {
+  id         String   @id @default(uuid())
+  title      String?
+  content    String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model checkin_logs {
+  id            String    @id @default(uuid())
+  checkin_time  DateTime?
+  checkout_time DateTime?
+  user          user?     @relation(fields: [userId], references: [id])
+  userId        String?
+  total_hours   Float?    @default(0)
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+}
+
+model role {
+  id            String   @id @default(uuid())
+  role_name     String
+  date_modified DateTime @default(now())
+  is_active     Boolean
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
