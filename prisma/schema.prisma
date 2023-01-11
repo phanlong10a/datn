@@ -96,3 +96,11 @@ model role {
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 }
+
+model refresh_password {
+  id         String   @id @default(uuid())
+  otp        Int?
+  user_token String?
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}

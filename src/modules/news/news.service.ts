@@ -12,7 +12,6 @@ export class NewsService {
 
   constructor(private readonly prisma: PrismaService,
     private readonly mailerService: MailerService) {
-
   }
 
   async getList(input: BaseSearchInput): Promise<BaseSearchResponse<NewsDto>> {

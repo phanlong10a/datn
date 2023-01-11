@@ -16,6 +16,8 @@ import { CreateUserInput } from './dto/create-user.dto';
 import { EditUserInput } from './dto/edit-user.dto';
 import { ROLE } from '@prisma/client';
 import { MailerService } from '@nestjs-modules/mailer';
+import { JwtService } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
@@ -23,6 +25,9 @@ export class UserService {
     private readonly prisma: PrismaService,
     private readonly hashing: HashingService,
     private readonly auth: AuthService,
+    private readonly mailerService: MailerService,
+    private readonly jwtService: JwtService,
+    private readonly config: ConfigService,
   ) { }
 
 
@@ -75,6 +80,77 @@ export class UserService {
       token,
       refreshToken,
     }
+  }
+
+
+  async resetPass(input: { email: string }, host: string): Promise<string> {
+    const user = await this.prisma.user.findFirst({
+      where: {
+        email: input.email,
+      },
+    })
+    if (!user) throw new BadRequestException('Tài khoản không tồn tại')
+
+    const randomOtp = Math.floor(100000 + Math.random() * 900000)
+    const token = this.auth.generateAccessToken(user.id)
+
+    await this.mailerService
+      .sendMail({
+        to: [user.email],
+        from: 'noreply@nestjs.com',
+        subject: 'Lấy lại mật khẩu',
+        text: 'Lấy lại mật khẩu',
+        html: `
+          <div>
+            <div>
+              <h2>
+                Bấm vào đường link <b><a href="${host}/reset-pass/${user.email}/${token}" target="_blank"> Tại đây</a></b>để lấy lại mật khẩu
+              </h2>
+            </div>
+          </div>
+        `, // HTML body content 
+      })
+
+    try {
+      await this.prisma.refresh_password.create({
+        data: {
+          otp: randomOtp,
+          user_token: token
+        }
+      })
+    } catch (error) {
+      throw new BadRequestException('Có lỗi xảy ra')
+    }
+
+    return 'Thành công, đường link lấy lại mật khẩu sẽ được gửi đến mail của bạn trong ít phút'
+  }
+
+  async resetPasswordWithToken(input: { email: string, password: string, token: string }): Promise<string> {
+    const verify = await this.jwtService.verify(input.token, {
+      secret: this.config.get<string>('jwt.accessToken.secret')
+    })
+    if (!verify.id) throw new BadRequestException('Quá hạn đổi mật khaaur')
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: verify.id,
+      },
+    });
+    if (user.email !== input.email) throw new BadRequestException('Tài khoản không tồn tại')
+
+    const newPassword = await this.hashing.hash(input.password)
+    try {
+      await this.prisma.user.update({
+        where: {
+          id: verify.id
+        },
+        data: {
+          password: newPassword
+        }
+      })
+    } catch (error) {
+      throw new BadRequestException('Có lỗi xảy ra')
+    }
+    return 'Thành công'
   }
 
 

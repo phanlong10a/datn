@@ -53,7 +53,7 @@ export class CheckinService {
       }
     }
     return {
-      total_hours: parseFloat(totalHour._sum.total_hours.toFixed(2)),
+      total_hours: totalHour._sum.total_hours ? parseFloat(totalHour._sum.total_hours?.toFixed(2)) : 0,
       data: {
         checkin: lastCheckin?.checkin_time ? moment(lastCheckin.checkin_time).format() : null,
         checkout: lastCheckin?.checkout_time ? moment(lastCheckin.checkout_time).format() : null,
@@ -630,7 +630,7 @@ export class CheckinService {
       is_insurance: boolean,
       total_insurance_percent: number,
       bhxh_insurance_percent: number,
-      bhyt_insurance_percent: number, 
+      bhyt_insurance_percent: number,
       bhtn_insurance_percent: number,
       dependent_person: number,
       email?: string,
@@ -739,19 +739,19 @@ export class CheckinService {
       "Thông số"
     ]
     const value = [
-      ['Email',mapData.email],
-      ['Họ tên',mapData.fullName],
-      ['Mã nhân viên',mapData.staffCode],
-      ['Thuế ước tính',mapData.tax],
-      ['Số giờ làm việc',mapData.totalWork],
-      ['Lương cơ bản',mapData.cost_salary],
-      ['Lương hoàn thành công việc',mapData.bonus_salary],
-      ['Nhân viên',mapData.is_insurance ? 'Chính thức' : 'Thử việc'],
-      ['Tổng bảo hiểm phải đóng',mapData.total_insurance],
-      ['Bảo hiểm xã hội',mapData.bhxh_insurance],
-      ['Bảo hiểm y tế',mapData.bhyt_insurance],
-      ['Bảo hiểm thất nghiệp',mapData.bhtn_insurance],
-      ['Lương dự kiến',mapData.expected_salary],
+      ['Email', mapData.email],
+      ['Họ tên', mapData.fullName],
+      ['Mã nhân viên', mapData.staffCode],
+      ['Thuế ước tính', mapData.tax],
+      ['Số giờ làm việc', mapData.totalWork],
+      ['Lương cơ bản', mapData.cost_salary],
+      ['Lương hoàn thành công việc', mapData.bonus_salary],
+      ['Nhân viên', mapData.is_insurance ? 'Chính thức' : 'Thử việc'],
+      ['Tổng bảo hiểm phải đóng', mapData.total_insurance],
+      ['Bảo hiểm xã hội', mapData.bhxh_insurance],
+      ['Bảo hiểm y tế', mapData.bhyt_insurance],
+      ['Bảo hiểm thất nghiệp', mapData.bhtn_insurance],
+      ['Lương dự kiến', mapData.expected_salary],
     ]
 
 

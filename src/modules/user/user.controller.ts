@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 import { randomUUID } from 'crypto';
 import * as moment from 'moment';
 import { catchError, firstValueFrom } from 'rxjs';
-import { Auth, CurrentUser } from 'src/decorators/Authorization';
+import { Auth, CurrentRequest, CurrentUser } from 'src/decorators/Authorization';
 import { BaseSearchInput } from 'src/helpers/base-search.input';
 import { BaseSearchResponse } from 'src/helpers/base-search.output';
 import { PrismaService } from 'src/share_modules/prisma.service';
@@ -70,6 +70,16 @@ export class UserController {
   @Post('api/admin/user/:id')
   async editUser(@Body() input: EditUserInput, @Param('id') id: string): Promise<string> {
     return await this.userService.editUser(input, id)
+  }
+
+
+  @Post('api/auth/forgot_password')
+  async resetPassword(@Body() input: { email: string }, @CurrentRequest() currentRequest: any): Promise<string> {
+    return await this.userService.resetPass(input, currentRequest?.headers?.origin)
+  }
+  @Post('/api/auth/reset_password')
+  async resetPasswordWithToken(@Body() input: { email: string, password: string, token: string }, @CurrentRequest() currentRequest: any): Promise<string> {
+    return await this.userService.resetPasswordWithToken(input)
   }
 
   @Auth()

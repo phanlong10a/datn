@@ -18,6 +18,13 @@ export class GraphqlAuthGuard extends AuthGuard('jwt') {
   }
 }
 
+export const CurrentRequest = createParamDecorator(
+  (data: string | undefined, context: ExecutionContext) => {
+    const ctx = context.switchToHttp().getRequest();
+    return ctx
+  }
+)
+
 export const CurrentUser = createParamDecorator(
   (data: string | undefined, context: ExecutionContext) => {
     const ctx = GqlExecutionContext.create(context);
@@ -36,8 +43,6 @@ export const RequestIp = createParamDecorator(
 @Injectable()
 class JwtPermissionsGuard implements CanActivate {
   constructor(private reflector: Reflector) { }
-
-
   canActivate(context: ExecutionContext): boolean {
     const user = GqlExecutionContext.create(context).getContext().req.user;
     if (!!user) {
