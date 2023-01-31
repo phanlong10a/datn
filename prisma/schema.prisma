@@ -17,7 +17,7 @@ enum ROLE {
 model user {
   id                 String         @id @default(uuid())
   email              String?
-  phone              String?
+  phone              String?        @default("0")
   avatar             String?
   fullName           String?
   password           String?
@@ -89,12 +89,13 @@ model checkin_logs {
 }
 
 model role {
-  id            String   @id @default(uuid())
+  id            String       @id @default(uuid())
   role_name     String
-  date_modified DateTime @default(now())
+  date_modified DateTime     @default(now())
   is_active     Boolean
-  created_at    DateTime @default(now())
-  updated_at    DateTime @updatedAt
+  created_at    DateTime     @default(now())
+  updated_at    DateTime     @updatedAt
+  test_table    test_table[]
 }
 
 model refresh_password {
@@ -103,4 +104,14 @@ model refresh_password {
   user_token String?
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model test_table {
+  id         String   @id @default(uuid())
+  name       String
+  test_name  String?
+  role       role?    @relation(fields: [roleId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  roleId     String?
 }

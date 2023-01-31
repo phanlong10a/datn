@@ -13,6 +13,7 @@ export class CheckinController {
   @Auth()
   @Get('api/timekeeping/get-keeping')
   async getCheckin(@CurrentUser('id') id: string): Promise<CheckinDto> {
+    console.log("🚀 ~ file: checkin.controller.ts:16 ~ CheckinController ~ getCheckin ~ id", id)
     return await this.checkinService.getCheckin(id);
   }
 

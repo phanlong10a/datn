@@ -45,7 +45,7 @@ export class CheckinService {
 
     if (!!lastCheckin?.checkin_time && !!lastCheckin?.checkout_time) {
       return {
-        total_hours: parseFloat(totalHour._sum.total_hours.toFixed(2)),
+        total_hours: parseFloat(totalHour?._sum?.total_hours?.toFixed(2)),
         data: {
           checkin: null,
           checkout: null,
@@ -285,11 +285,9 @@ export class CheckinService {
       }
     }
 
-
     const total = newList.length;
+    console.log("🚀 ~ file: checkin.service.ts:289 ~ CheckinService ~ getListSalary ~ newList", newList)
     const data = newList.slice(((input.page) - 1) * input.size, ((input.page) - 1) * input.size + input.size)
-
-
     return {
       total: total,
       data: data

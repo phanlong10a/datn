@@ -161,6 +161,7 @@ export class UserService {
           not: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
           contains: input.search_text
         },
+        phone: { contains: input.search_text },
         deleted: false
       }
     })
@@ -169,7 +170,11 @@ export class UserService {
       skip: input.size * (input.page - 1),
       take: input.size,
       where: {
-        email: { contains: input.search_text },
+        email: {
+          not: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
+          contains: input.search_text
+        },
+        phone: { contains: input.search_text },
         deleted: false
       },
       include: {

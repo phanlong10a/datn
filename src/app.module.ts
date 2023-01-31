@@ -2,7 +2,6 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
-import firebaseConfig from './helpers/firebase.config';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import configuration from './share_modules/config/configuration';
@@ -13,12 +12,13 @@ import { DepartmentModule } from './modules/department/department.module';
 import { PolicyModule } from './modules/policy/policy.module';
 import { NewsModule } from './modules/news/news.module';
 import { CheckinModule } from './modules/checkin/checkin.module';
+import { TestModelModule } from './modules/test-model/test-model.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [configuration, firebaseConfig],
+      load: [configuration],
       envFilePath: ['.env'],
       validationSchema: validate,
       validationOptions: {
@@ -43,6 +43,7 @@ import { CheckinModule } from './modules/checkin/checkin.module';
     PolicyModule,
     NewsModule,
     CheckinModule,
+    TestModelModule,
   ],
   // providers: [FirebaseService],
 })
