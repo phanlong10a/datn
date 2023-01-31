@@ -26,6 +26,12 @@ model user {
   address            String?
   staffCode          String?        @unique
   dateOfBirth        String?
+  cccd               String?
+  startDate          String?
+  bankNumber         String?
+  backAccount        String?
+  statusWork         String?
+  note               String?
   position           position?      @relation(fields: [positionId], references: [id], onDelete: SetNull)
   department         department?    @relation(fields: [departmentId], references: [id], onDelete: SetNull)
   status             Boolean        @default(true)

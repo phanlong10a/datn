@@ -9,4 +9,16 @@ export class EditUserInput {
   @IsString()
   @IsNotEmpty()
   fullName: string;
+
+  cccd: string
+
+  startDate: string
+
+  bankNumber: string
+
+  backAccount: string
+
+  statusWork: string
+
+  note: string
 }

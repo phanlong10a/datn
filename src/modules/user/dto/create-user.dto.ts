@@ -17,4 +17,17 @@ export class CreateUserInput {
   @IsNotEmpty()
   @IsString()
   positionId: string;
+
+
+  cccd: string
+
+  startDate: string
+
+  bankNumber: string
+
+  backAccount: string
+
+  statusWork: string
+
+  note: string
 }
