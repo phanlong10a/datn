@@ -157,12 +157,24 @@ export class UserService {
   async listUser(input: BaseSearchInput): Promise<BaseSearchResponse<UserDto>> {
     const countUser = await this.prisma.user.count({
       where: {
-        email: {
-          not: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
-          contains: input.search_text
-        },
-        phone: { contains: input.search_text },
-        deleted: false
+        AND: [
+          {
+            OR: [
+              {
+                email: {
+                  not: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
+                  contains: input.search_text
+                },
+              },
+              {
+                phone: { contains: input.search_text },
+              }
+            ]
+          },
+          {
+            deleted: false
+          }
+        ]
       }
     })
 
@@ -170,12 +182,24 @@ export class UserService {
       skip: input.size * (input.page - 1),
       take: input.size,
       where: {
-        email: {
-          not: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
-          contains: input.search_text
-        },
-        phone: { contains: input.search_text },
-        deleted: false
+        AND: [
+          {
+            OR: [
+              {
+                email: {
+                  not: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
+                  contains: input.search_text
+                },
+              },
+              {
+                phone: { contains: input.search_text },
+              }
+            ]
+          },
+          {
+            deleted: false
+          }
+        ]
       },
       include: {
         department: true,
