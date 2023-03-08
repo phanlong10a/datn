@@ -12,10 +12,10 @@ import { HttpModule } from '@nestjs/axios';
     AuthModule,
     forwardRef(() => UploadServiceModule),
     JwtModule.register({}),
-    HttpModule
+    HttpModule,
   ],
   providers: [UserService, ErrorService],
   exports: [UserService],
   controllers: [UserController],
 })
-export class UserModule { }
+export class UserModule {}

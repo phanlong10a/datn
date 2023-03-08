@@ -7,12 +7,7 @@ import { UserModule } from './modules/user/user.module';
 import configuration from './share_modules/config/configuration';
 import { validate } from './share_modules/config/validate.config';
 import { SharedModule } from './share_modules/share.module';
-import { PositionModule } from './modules/position/position.module';
-import { DepartmentModule } from './modules/department/department.module';
-import { PolicyModule } from './modules/policy/policy.module';
-import { NewsModule } from './modules/news/news.module';
-import { CheckinModule } from './modules/checkin/checkin.module';
-import { TestModelModule } from './modules/test-model/test-model.module';
+import { MedicineModule } from './modules/medicine/medicine.module';
 
 @Module({
   imports: [
@@ -38,13 +33,8 @@ import { TestModelModule } from './modules/test-model/test-model.module';
     SharedModule,
     UserModule,
     AuthModule,
-    PositionModule,
-    DepartmentModule,
-    PolicyModule,
-    NewsModule,
-    CheckinModule,
-    TestModelModule,
+    MedicineModule,
   ],
   // providers: [FirebaseService],
 })
-export class AppModule { }
+export class AppModule {}

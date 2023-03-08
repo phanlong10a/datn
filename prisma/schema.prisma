@@ -3,6 +3,19 @@ generator client {
   previewFeatures = ["interactiveTransactions", "fullTextSearch"]
 }
 
+enum MEASURE_UNIT {
+  MG
+  ML
+}
+
+enum MEDICINE_TYPE {
+  THANG
+  HOAN
+  TAN
+  CAO
+  DAN
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -15,16 +28,15 @@ enum ROLE {
 }
 
 model user {
-  id                 String         @id @default(uuid())
+  id                 String   @id @default(uuid())
   email              String?
-  phone              String?        @default("0")
+  phone              String?  @default("0")
   avatar             String?
   fullName           String?
   password           String?
   resetPasswordToken String?
-  role               ROLE
   address            String?
-  staffCode          String?        @unique
+  staffCode          String?  @unique
   dateOfBirth        String?
   cccd               String?
   startDate          String?
@@ -32,76 +44,10 @@ model user {
   backAccount        String?
   statusWork         String?
   note               String?
-  position           position?      @relation(fields: [positionId], references: [id], onDelete: SetNull)
-  department         department?    @relation(fields: [departmentId], references: [id], onDelete: SetNull)
-  status             Boolean        @default(true)
-  positionId         String?
-  departmentId       String?
-  created_at         DateTime       @default(now())
-  updated_at         DateTime       @updatedAt
-  deleted            Boolean        @default(false)
-  dependent_person   Int            @default(0)
-  checkin_logs       checkin_logs[]
-}
-
-model position {
-  id                      String   @id @default(uuid())
-  cost_salary             Float
-  bonus_salary            Float
-  name                    String
-  is_insurance            Boolean
-  total_insurance_percent Float    @default(10.5)
-  bhxh_insurance_percent  Float    @default(8)
-  bhyt_insurance_percent  Float    @default(1.5)
-  bhtn_insurance_percent  Float    @default(1)
-  user                    user[]
-  created_at              DateTime @default(now())
-  updated_at              DateTime @updatedAt
-}
-
-model department {
-  id         String   @id @default(uuid())
-  name       String
-  user       user[]
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model policy {
-  id         String   @id @default(uuid())
-  title      String?
-  content    String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model news {
-  id         String   @id @default(uuid())
-  title      String?
-  content    String?
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-}
-
-model checkin_logs {
-  id            String    @id @default(uuid())
-  checkin_time  DateTime?
-  checkout_time DateTime?
-  user          user?     @relation(fields: [userId], references: [id])
-  userId        String?
-  total_hours   Float?    @default(0)
-  created_at    DateTime  @default(now())
-  updated_at    DateTime  @updatedAt
-}
-
-model role {
-  id            String       @id @default(uuid())
-  role_name     String
-  date_modified DateTime     @default(now())
-  is_active     Boolean
-  created_at    DateTime     @default(now())
-  updated_at    DateTime     @updatedAt
-  test_table    test_table[]
+  status             Boolean  @default(true)
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  deleted            Boolean  @default(false)
 }
 
 model refresh_password {
@@ -112,12 +58,94 @@ model refresh_password {
   updated_at DateTime @updatedAt
 }
 
-model test_table {
-  id         String   @id @default(uuid())
-  name       String
-  test_name  String?
-  role       role?    @relation(fields: [roleId], references: [id])
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-  roleId     String?
+// thuốc
+model medicine {
+  id                    String                  @id @default(uuid())
+  name                  String?
+  measure_unit          MEASURE_UNIT? // đơn vị đo
+  description           String?
+  type                  MEDICINE_TYPE? // loại thuốc
+  dosage                String? // liều dùng cơ bản
+  price_per_unit        Float? // giá trên mỗi đơn vị 
+  image                 String? // ảnh thuốc
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @updatedAt()
+  prescription_medicine prescription_medicine[]
+  medicine_transaction  medicine_transaction[]
+}
+
+model prescription_medicine {
+  id             String        @id @default(uuid())
+  medicine       medicine?     @relation(fields: [medicineId], references: [id])
+  medicineId     String?
+  amount_dosage  Float? // liều dùng cần thiết
+  created_at     DateTime      @default(now())
+  updated_at     DateTime      @updatedAt()
+  prescription   prescription? @relation(fields: [prescriptionId], references: [id])
+  prescriptionId String?
+}
+
+model medicine_transaction {
+  id                    String               @id @default(uuid())
+  medicine              medicine?            @relation(fields: [medicineId], references: [id])
+  medicineId            String?
+  amount_price          Float? // chi tiết chi tiêu 
+  created_at            DateTime             @default(now())
+  updated_at            DateTime             @updatedAt()
+  isComplete            Boolean              @default(false)
+  receipt_transaction   receipt_transaction? @relation(fields: [receipt_transactionId], references: [id])
+  receipt_transactionId String?
+}
+
+model prescription {
+  id                      String                    @id @default(uuid())
+  name                    String? // Tên danh mục thuốc
+  disease                 String? // Loại bệnh điều trị
+  prescription_medicine   prescription_medicine[] // các thuốc cần dùng 
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @updatedAt()
+  prescription_transation prescription_transation[]
+}
+
+model prescription_transation {
+  id                    String               @id @default(uuid())
+  prescription          prescription?        @relation(fields: [prescriptionId], references: [id])
+  total_amount          Float? // tổng số tiền 
+  created_at            DateTime             @default(now())
+  updated_at            DateTime             @updatedAt()
+  prescriptionId        String?
+  isComplete            Boolean              @default(false)
+  receipt_transaction   receipt_transaction? @relation(fields: [receipt_transactionId], references: [id])
+  receipt_transactionId String?
+}
+
+model receipt_transaction {
+  id                      String                    @id @default(uuid())
+  measure_fee             Float?
+  medicine_transaction    medicine_transaction[]
+  prescription_transation prescription_transation[]
+  isComplete              Boolean                   @default(false)
+  created_at              DateTime                  @default(now())
+  updated_at              DateTime                  @updatedAt()
+  patient                 patient?                  @relation(fields: [patientId], references: [id])
+  patientId               String?
+}
+
+model patient {
+  id                  String                @id @default(uuid())
+  email               String?
+  phone               String?               @default("0")
+  avatar              String?
+  fullName            String?
+  address             String?
+  dateOfBirth         String?
+  cccd                String?
+  bankNumber          String?
+  backAccount         String?
+  receipt_transaction receipt_transaction[]
+  note                String?
+  status              Boolean               @default(true)
+  created_at          DateTime              @default(now())
+  updated_at          DateTime              @updatedAt
+  deleted             Boolean               @default(false)
 }

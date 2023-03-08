@@ -1,4 +1,3 @@
-import { ROLE } from '@prisma/client';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateUserInput {
@@ -6,28 +5,15 @@ export class CreateUserInput {
   @IsString()
   email: string;
 
-  @IsNotEmpty()
-  role: ROLE;
+  cccd: string;
 
-  @IsNotEmpty()
-  @IsString()
-  departmentId: string;
+  startDate: string;
 
+  bankNumber: string;
 
-  @IsNotEmpty()
-  @IsString()
-  positionId: string;
+  backAccount: string;
 
+  statusWork: string;
 
-  cccd: string
-
-  startDate: string
-
-  bankNumber: string
-
-  backAccount: string
-
-  statusWork: string
-
-  note: string
+  note: string;
 }

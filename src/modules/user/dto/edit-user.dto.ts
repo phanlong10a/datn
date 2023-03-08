@@ -1,4 +1,3 @@
-import { ROLE } from '@prisma/client';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 export class EditUserInput {
@@ -10,15 +9,15 @@ export class EditUserInput {
   @IsNotEmpty()
   fullName: string;
 
-  cccd: string
+  cccd: string;
 
-  startDate: string
+  startDate: string;
 
-  bankNumber: string
+  bankNumber: string;
 
-  backAccount: string
+  backAccount: string;
 
-  statusWork: string
+  statusWork: string;
 
-  note: string
+  note: string;
 }

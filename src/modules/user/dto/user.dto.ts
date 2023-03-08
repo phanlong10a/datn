@@ -1,7 +1,4 @@
-import { ROLE } from "@prisma/client";
-
 export interface UserDto {
-
   id?: string;
 
   fullName?: string;
@@ -32,7 +29,5 @@ export interface UserDto {
 
   status?: boolean;
 
-  role?: ROLE;
-
-  checkin_logs?: any
+  checkin_logs?: any;
 }
