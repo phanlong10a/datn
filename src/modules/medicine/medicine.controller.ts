@@ -37,6 +37,6 @@ export class MedicineController {
 
   @Delete('/:id')
   async deleteMedicine(@Param('id') id: string) {
-    return await this.deleteMedicine(id);
+    return await this.medicineService.deleteMedicine(id);
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { medicine } from '@prisma/client';
 import { BaseOutput } from 'src/helpers/base-output';
 import { BaseSearchInput } from 'src/helpers/base-search.input';
@@ -58,7 +58,9 @@ export class MedicineService {
         },
       });
       return new BaseOutput<medicine>(response, '');
-    } catch (error) {}
+    } catch (error) {
+      throw new BadRequestException(error);
+    }
   }
 
   async deleteMedicine(id: string) {

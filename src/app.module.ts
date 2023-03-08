@@ -8,6 +8,8 @@ import configuration from './share_modules/config/configuration';
 import { validate } from './share_modules/config/validate.config';
 import { SharedModule } from './share_modules/share.module';
 import { MedicineModule } from './modules/medicine/medicine.module';
+import { PrescriptionModule } from './modules/prescription/prescription.module';
+import { PatientModule } from './modules/patient/patient.module';
 
 @Module({
   imports: [
@@ -34,6 +36,8 @@ import { MedicineModule } from './modules/medicine/medicine.module';
     UserModule,
     AuthModule,
     MedicineModule,
+    PrescriptionModule,
+    PatientModule,
   ],
   // providers: [FirebaseService],
 })
