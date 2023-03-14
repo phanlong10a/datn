@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { patient } from '@prisma/client';
 import { BaseOutput } from 'src/helpers/base-output';
+import { BaseSearchInput } from 'src/helpers/base-search.input';
 import { PrismaService } from 'src/share_modules/prisma.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
@@ -19,19 +20,45 @@ export class PatientService {
     }
   }
 
-  findAll() {
-    return `This action returns all patient`;
+  async findAll(input: BaseSearchInput) {
+    try {
+      const response = await this.prismaService.patient.findMany({
+        where: {
+          fullName: {
+            contains: input.search_text,
+            mode: 'insensitive',
+          },
+        },
+      });
+      return new BaseOutput<patient[]>(response, '');
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} patient`;
+  async findOne(id: string) {
+    try {
+      const response = await this.prismaService.patient.findFirstOrThrow({
+        where: { id },
+      });
+      return new BaseOutput<patient>({ ...response }, '');
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 
-  update(id: number, updatePatientDto: UpdatePatientDto) {
-    return `This action updates a #${id} patient`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} patient`;
+  async update(id: string, updatePatientDto: UpdatePatientDto) {
+    try {
+      await this.prismaService.patient.findFirstOrThrow({
+        where: { id },
+      });
+      const response = await this.prismaService.patient.update({
+        where: { id },
+        data: updatePatientDto,
+      });
+      return new BaseOutput<patient>({ ...response }, '');
+    } catch (e) {
+      throw new BadRequestException(e);
+    }
   }
 }

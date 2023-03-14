@@ -1,13 +1,13 @@
 import { IsNotEmpty } from 'class-validator';
 export class CreatePrescriptionDto {
   @IsNotEmpty()
-  receiptId: string;
-  disease?: string;
-  name?: string;
-  totalCount?: string;
-  description?: string;
-  isComplete?: boolean;
-  medicine?: MedicinePrescription[];
+  patientId: string;
+
+  isComplete: boolean;
+
+  measure_fee: number;
+
+  prescription_transation: string[];
 }
 export class MedicinePrescription {
   id: string;

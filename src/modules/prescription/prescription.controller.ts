@@ -10,8 +10,9 @@ import {
 import { PrescriptionService } from './prescription.service';
 import { CreatePrescriptionDto } from './dto/create-prescription.dto';
 import { UpdatePrescriptionDto } from './dto/update-prescription.dto';
+import { BaseSearchInput } from 'src/helpers/base-search.input';
 
-@Controller('prescription')
+@Controller('/prescription/')
 export class PrescriptionController {
   constructor(private readonly prescriptionService: PrescriptionService) {}
 
@@ -20,9 +21,9 @@ export class PrescriptionController {
     return await this.prescriptionService.create(createPrescriptionDto);
   }
 
-  @Get()
-  async findAll() {
-    return await this.prescriptionService.findAll();
+  @Post('list')
+  async findAll(@Body() input: BaseSearchInput) {
+    return await this.prescriptionService.findAll(input);
   }
 
   @Get(':id')

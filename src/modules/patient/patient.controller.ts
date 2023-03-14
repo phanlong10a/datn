@@ -6,37 +6,37 @@ import {
   Patch,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { PatientService } from './patient.service';
 import { CreatePatientDto } from './dto/create-patient.dto';
 import { UpdatePatientDto } from './dto/update-patient.dto';
+import { BaseSearchInput } from 'src/helpers/base-search.input';
 
-@Controller('patient')
+@Controller('/patient')
 export class PatientController {
   constructor(private readonly patientService: PatientService) {}
 
   @Post()
-  create(@Body() createPatientDto: CreatePatientDto) {
-    return this.patientService.create(createPatientDto);
+  async create(@Body() createPatientDto: CreatePatientDto) {
+    return await this.patientService.create(createPatientDto);
   }
 
-  @Get()
-  findAll() {
-    return this.patientService.findAll();
+  @Post('/list')
+  async findAll(@Body() input: BaseSearchInput) {
+    return await this.patientService.findAll(input);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.patientService.findOne(+id);
+  @Get('/:id')
+  async findOne(@Param('id') id: string) {
+    return await this.patientService.findOne(id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updatePatientDto: UpdatePatientDto) {
-    return this.patientService.update(+id, updatePatientDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.patientService.remove(+id);
+  @Put('/:id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePatientDto: UpdatePatientDto,
+  ) {
+    return await this.patientService.update(id, updatePatientDto);
   }
 }

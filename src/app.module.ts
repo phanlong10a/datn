@@ -10,6 +10,7 @@ import { SharedModule } from './share_modules/share.module';
 import { MedicineModule } from './modules/medicine/medicine.module';
 import { PrescriptionModule } from './modules/prescription/prescription.module';
 import { PatientModule } from './modules/patient/patient.module';
+import { ReceiptModule } from './modules/receipt/receipt.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { PatientModule } from './modules/patient/patient.module';
     MedicineModule,
     PrescriptionModule,
     PatientModule,
+    ReceiptModule,
   ],
   // providers: [FirebaseService],
 })

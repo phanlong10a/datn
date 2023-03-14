@@ -16,6 +16,28 @@ enum MEDICINE_TYPE {
   DAN
 }
 
+enum TINH_THUOC {
+  HAN
+  LUONG
+  NHIET
+  ON
+  BINH
+}
+
+enum VI_CUA_THUOC {
+  NGOT
+  CAY
+  DANG
+  CHUA
+  MAN
+}
+
+enum NGUYEN_LIEU {
+  THUC_VAT
+  DONG_VAT
+  KHAC
+}
+
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
@@ -25,6 +47,11 @@ enum ROLE {
   ADMIN
   STAFF
   EDITOR
+}
+
+enum SIDE_THUOC {
+  THUOC_BAC
+  THUOC_NAM
 }
 
 model user {
@@ -65,68 +92,54 @@ model medicine {
   measure_unit          MEASURE_UNIT? // đơn vị đo
   description           String?
   type                  MEDICINE_TYPE? // loại thuốc
+  tinh_thuoc            TINH_THUOC?
+  vi_cua_thuoc          VI_CUA_THUOC?
+  nguyen_lieu           NGUYEN_LIEU?
+  side_thuoc            SIDE_THUOC?
   dosage                String? // liều dùng cơ bản
   price_per_unit        Float? // giá trên mỗi đơn vị 
   image                 String? // ảnh thuốc
   created_at            DateTime                @default(now())
   updated_at            DateTime                @updatedAt()
   prescription_medicine prescription_medicine[]
-  medicine_transaction  medicine_transaction[]
 }
 
 model prescription_medicine {
-  id             String        @id @default(uuid())
-  medicine       medicine?     @relation(fields: [medicineId], references: [id])
-  medicineId     String?
-  amount_dosage  Float? // liều dùng cần thiết
-  created_at     DateTime      @default(now())
-  updated_at     DateTime      @updatedAt()
-  prescription   prescription? @relation(fields: [prescriptionId], references: [id])
-  prescriptionId String?
-}
-
-model medicine_transaction {
-  id                    String               @id @default(uuid())
-  medicine              medicine?            @relation(fields: [medicineId], references: [id])
-  medicineId            String?
-  amount_price          Float? // chi tiết chi tiêu 
-  created_at            DateTime             @default(now())
-  updated_at            DateTime             @updatedAt()
-  isComplete            Boolean              @default(false)
-  receipt_transaction   receipt_transaction? @relation(fields: [receipt_transactionId], references: [id])
-  receipt_transactionId String?
-}
-
-model prescription {
-  id                      String                    @id @default(uuid())
-  name                    String? // Tên danh mục thuốc
-  disease                 String? // Loại bệnh điều trị
-  prescription_medicine   prescription_medicine[] // các thuốc cần dùng 
-  created_at              DateTime                  @default(now())
-  updated_at              DateTime                  @updatedAt()
-  prescription_transation prescription_transation[]
+  id                        String                   @id @default(uuid())
+  medicine                  medicine?                @relation(fields: [medicineId], references: [id])
+  medicineId                String?
+  amount_dosage             Float? // liều dùng cần thiết
+  created_at                DateTime                 @default(now())
+  updated_at                DateTime                 @updatedAt()
+  prescription_transation   prescription_transation? @relation(fields: [prescription_transationId], references: [id])
+  prescription_transationId String?
 }
 
 model prescription_transation {
-  id                    String               @id @default(uuid())
-  prescription          prescription?        @relation(fields: [prescriptionId], references: [id])
+  id                    String                  @id @default(uuid())
+  name                  String?
+  disease               String? // Loại bệnh điều trị
+  prescription_medicine prescription_medicine[] // các thuốc cần dùng 
   total_amount          Float? // tổng số tiền 
-  created_at            DateTime             @default(now())
-  updated_at            DateTime             @updatedAt()
+  created_at            DateTime                @default(now())
+  updated_at            DateTime                @updatedAt()
+  total_count           Int?
   prescriptionId        String?
-  isComplete            Boolean              @default(false)
-  receipt_transaction   receipt_transaction? @relation(fields: [receipt_transactionId], references: [id])
+  description           String?
+  isComplete            Boolean?                 @default(false)
+  receipt_transaction   receipt_transaction?    @relation(fields: [receipt_transactionId], references: [id])
   receipt_transactionId String?
 }
 
 model receipt_transaction {
   id                      String                    @id @default(uuid())
+  code                    String?
   measure_fee             Float?
-  medicine_transaction    medicine_transaction[]
   prescription_transation prescription_transation[]
-  isComplete              Boolean                   @default(false)
-  created_at              DateTime                  @default(now())
-  updated_at              DateTime                  @updatedAt()
+  isComplete              Boolean?                   @default(false)
+  paidStatus              Boolean?                   @default(false)
+  created_at              DateTime?                  @default(now())
+  updated_at              DateTime?                  @updatedAt()
   patient                 patient?                  @relation(fields: [patientId], references: [id])
   patientId               String?
 }

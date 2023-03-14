@@ -14,8 +14,16 @@ export class MedicineService {
       const response = await this.prisma.medicine.create({
         data: input,
       });
+      console.log(
+        '🚀 ~ file: medicine.service.ts:17 ~ MedicineService ~ createMedicine ~ response:',
+        response,
+      );
       return new BaseOutput<medicine>(response, 'Tạo thuốc thành công');
     } catch (error) {
+      console.log(
+        '🚀 ~ file: medicine.service.ts:23 ~ MedicineService ~ createMedicine ~ error:',
+        error,
+      );
       return error;
     }
   }
