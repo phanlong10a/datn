@@ -17,10 +17,6 @@ export class MedicineController {
 
   @Post()
   async createMedicine(@Body() input: medicineDto) {
-    console.log(
-      '🚀 ~ file: medicine.controller.ts:20 ~ MedicineController ~ createMedicine ~ input:',
-      input,
-    );
     return await this.medicineService.createMedicine(input);
   }
 

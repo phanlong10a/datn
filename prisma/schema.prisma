@@ -55,26 +55,28 @@ enum SIDE_THUOC {
 }
 
 model user {
-  id                 String   @id @default(uuid())
-  email              String?
-  phone              String?  @default("0")
-  avatar             String?
-  fullName           String?
-  password           String?
-  resetPasswordToken String?
-  address            String?
-  staffCode          String?  @unique
-  dateOfBirth        String?
-  cccd               String?
-  startDate          String?
-  bankNumber         String?
-  backAccount        String?
-  statusWork         String?
-  note               String?
-  status             Boolean  @default(true)
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
-  deleted            Boolean  @default(false)
+  id                         String                @id @default(uuid())
+  email                      String?
+  phone                      String?               @default("0")
+  avatar                     String?
+  fullName                   String?
+  password                   String?
+  resetPasswordToken         String?
+  address                    String?
+  staffCode                  String?               @unique
+  dateOfBirth                String?
+  cccd                       String?
+  startDate                  String?
+  bankNumber                 String?
+  backAccount                String?
+  statusWork                 String?
+  note                       String?
+  status                     Boolean               @default(true)
+  created_at                 DateTime              @default(now())
+  updated_at                 DateTime              @updatedAt
+  deleted                    Boolean               @default(false)
+  receipt_transaction        receipt_transaction[] @relation("create")
+  receipt_transaction_update receipt_transaction[] @relation("update")
 }
 
 model refresh_password {
@@ -126,22 +128,28 @@ model prescription_transation {
   total_count           Int?
   prescriptionId        String?
   description           String?
-  isComplete            Boolean?                 @default(false)
+  isComplete            Boolean?                @default(false)
   receipt_transaction   receipt_transaction?    @relation(fields: [receipt_transactionId], references: [id])
-  receipt_transactionId String?
+  receipt_transactionId String?                 @unique
 }
 
 model receipt_transaction {
-  id                      String                    @id @default(uuid())
+  id                      String                   @id @default(uuid())
   code                    String?
   measure_fee             Float?
-  prescription_transation prescription_transation[]
-  isComplete              Boolean?                   @default(false)
-  paidStatus              Boolean?                   @default(false)
-  created_at              DateTime?                  @default(now())
-  updated_at              DateTime?                  @updatedAt()
-  patient                 patient?                  @relation(fields: [patientId], references: [id])
+  diagnose                String?
+  description             String?
+  isComplete              Boolean?                 @default(false)
+  paidStatus              Boolean?                 @default(false)
+  created_at              DateTime?                @default(now())
+  updated_at              DateTime?                @updatedAt()
+  patient                 patient?                 @relation(fields: [patientId], references: [id])
   patientId               String?
+  prescription_transation prescription_transation?
+  created_by              user?                    @relation("create", fields: [created_by_id], references: [id])
+  created_by_id           String?
+  updated_by              user?                    @relation("update", fields: [updated_by_id], references: [id])
+  updated_by_id           String?
 }
 
 model patient {
