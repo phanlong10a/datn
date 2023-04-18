@@ -4,6 +4,7 @@ import { BaseOutput } from 'src/helpers/base-output';
 import { BaseSearchInput } from 'src/helpers/base-search.input';
 import { PrismaService } from 'src/share_modules/prisma.service';
 import { CreatePrescriptionDto1 } from './dto/receipt.dto';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class ReceiptService {
@@ -89,7 +90,7 @@ export class ReceiptService {
       'Thanh toán thành công',
     );
   }
-  async confirm(id: string) {
+  async confirm(id: string, idUser: string) {
     console.log(
       '🚀 ~ file: receipt.service.ts:93 ~ ReceiptService ~ confirm ~ id:',
       id,
@@ -98,6 +99,7 @@ export class ReceiptService {
       where: { id },
       data: {
         paidStatus: true,
+        updated_by_id: idUser,
       },
       include: {
         patient: true,
@@ -150,6 +152,52 @@ export class ReceiptService {
           item1.measure_fee;
         return {
           ...item1,
+          totalFee,
+        };
+      }),
+      total: response.length,
+    };
+  }
+
+  async getRevenue({ month }: { month: string }) {
+    const response = await this.prisma.receipt_transaction.findMany({
+      where: {
+        created_at: {
+          gt: dayjs(month).add(-1, 'M').toDate(),
+          lte: dayjs(month).add(1, 'M').toDate(),
+        },
+      },
+      include: {
+        patient: true,
+        created_by: true,
+        updated_by: true,
+        prescription_transation: {
+          include: {
+            prescription_medicine: {
+              include: {
+                medicine: true,
+              },
+            },
+          },
+        },
+      },
+    });
+    return {
+      data: response.map((item1) => {
+        const { created_at, measure_fee, created_by } = item1;
+        const totalFee =
+          item1.prescription_transation.prescription_medicine.reduce(
+            (current, item) => {
+              const totalFeeMedicine =
+                item.medicine.price_per_unit * item.amount_dosage;
+              return current + totalFeeMedicine;
+            },
+            0,
+          ) * item1.prescription_transation.total_count;
+        return {
+          created_at,
+          measure_fee,
+          created_by,
           totalFee,
         };
       }),

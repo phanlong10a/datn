@@ -34,8 +34,15 @@ export class ReceiptController {
     return await this.receiptService.search(id);
   }
 
+  @Auth()
   @Post('/confirm/:id')
-  async confirm(@Param('id') id: string) {
-    return await this.receiptService.confirm(id);
+  async confirm(@Param('id') id: string, @CurrentUser('id') idUser: string) {
+    return await this.receiptService.confirm(id, idUser);
+  }
+
+  @Post('/getListRevenue')
+  async getRevenue(@Body() body: { month: string }) {
+    const a = await this.receiptService.getRevenue(body);
+    return a;
   }
 }

@@ -13,6 +13,7 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
         data: [
           {
             email: DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.EMAIL,
+            isAdmin: true,
             password: bcrypt.hashSync(
               DEFAULT_DATABASE.SUPER_ADMIN_ACCOUNT.PASSWORD,
               10,

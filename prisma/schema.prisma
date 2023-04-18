@@ -71,6 +71,7 @@ model user {
   backAccount                String?
   statusWork                 String?
   note                       String?
+  isAdmin                    Boolean?              @default(false)
   status                     Boolean               @default(true)
   created_at                 DateTime              @default(now())
   updated_at                 DateTime              @updatedAt

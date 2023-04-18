@@ -65,6 +65,7 @@ export class UserService {
       email: user.email,
       fullName: user.fullName,
       id: user.id,
+      isAdmin: user.isAdmin,
       token,
       refreshToken,
     };

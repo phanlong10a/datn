@@ -20,4 +20,8 @@ export class EditUserInput {
   statusWork: string;
 
   note: string;
+
+  oldPassword: string;
+
+  newPassword: string;
 }
