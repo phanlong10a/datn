@@ -21,5 +21,5 @@ export class medicineDto {
   price_per_unit?: number; // giá trên mỗi đơn vị
   created_at?: string;
   updated_at?: string;
-  images?: string;
+  image?: string;
 }

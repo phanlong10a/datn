@@ -43,6 +43,10 @@ export class ReceiptController {
   @Post('/getListRevenue')
   async getRevenue(@Body() body: { month: string }) {
     const a = await this.receiptService.getRevenue(body);
+    console.log(
+      '🚀 ~ file: receipt.controller.ts:46 ~ ReceiptController ~ getRevenue ~ a:',
+      a,
+    );
     return a;
   }
 }

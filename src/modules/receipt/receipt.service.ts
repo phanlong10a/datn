@@ -163,7 +163,7 @@ export class ReceiptService {
     const response = await this.prisma.receipt_transaction.findMany({
       where: {
         created_at: {
-          gt: dayjs(month).add(-1, 'M').toDate(),
+          gt: dayjs(month).add(0, 'M').toDate(),
           lte: dayjs(month).add(1, 'M').toDate(),
         },
       },
@@ -182,26 +182,36 @@ export class ReceiptService {
         },
       },
     });
+
+    const cloneResponse = response.map((item1) => {
+      const { created_at, measure_fee, created_by } = item1;
+      const totalFee =
+        item1.prescription_transation.prescription_medicine.reduce(
+          (current, item) => {
+            const totalFeeMedicine =
+              item.medicine.price_per_unit * item.amount_dosage;
+            return current + totalFeeMedicine;
+          },
+          0,
+        ) * item1.prescription_transation.total_count;
+      return {
+        created_at,
+        measure_fee,
+        created_by,
+        totalFee,
+      };
+    });
+
     return {
-      data: response.map((item1) => {
-        const { created_at, measure_fee, created_by } = item1;
-        const totalFee =
-          item1.prescription_transation.prescription_medicine.reduce(
-            (current, item) => {
-              const totalFeeMedicine =
-                item.medicine.price_per_unit * item.amount_dosage;
-              return current + totalFeeMedicine;
-            },
-            0,
-          ) * item1.prescription_transation.total_count;
-        return {
-          created_at,
-          measure_fee,
-          created_by,
-          totalFee,
-        };
-      }),
+      data: cloneResponse,
+      monthlyMedicine: cloneResponse.reduce((prev, current) => {
+        return prev + current.totalFee;
+      }, 0),
+      monthlyFee: cloneResponse.reduce((prev, current) => {
+        return prev + current.measure_fee;
+      }, 0),
       total: response.length,
+      month: dayjs(month).format('MM'),
     };
   }
 }

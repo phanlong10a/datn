@@ -11,6 +11,7 @@ import { MedicineModule } from './modules/medicine/medicine.module';
 import { PrescriptionModule } from './modules/prescription/prescription.module';
 import { PatientModule } from './modules/patient/patient.module';
 import { ReceiptModule } from './modules/receipt/receipt.module';
+import { LoginModule } from './login/login.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { ReceiptModule } from './modules/receipt/receipt.module';
     PrescriptionModule,
     PatientModule,
     ReceiptModule,
+    LoginModule,
   ],
   // providers: [FirebaseService],
 })

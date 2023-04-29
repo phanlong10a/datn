@@ -10,6 +10,10 @@ export class MedicineService {
   constructor(private prisma: PrismaService) {}
 
   async createMedicine(input: medicineDto) {
+    console.log(
+      '🚀 ~ file: medicine.service.ts:13 ~ MedicineService ~ createMedicine ~ input:',
+      input,
+    );
     try {
       const response = await this.prisma.medicine.create({
         data: input,
@@ -28,6 +32,10 @@ export class MedicineService {
     }
   }
   async updateMedicine(input: medicineDto, id: string) {
+    console.log(
+      '🚀 ~ file: medicine.service.ts:35 ~ MedicineService ~ updateMedicine ~ input:',
+      input,
+    );
     try {
       const response = await this.prisma.medicine.update({
         where: {

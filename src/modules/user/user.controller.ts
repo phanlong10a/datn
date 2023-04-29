@@ -33,10 +33,6 @@ export class UserController {
   @Auth()
   @Get('api/user/profile')
   async profile(@CurrentUser('id') id: string) {
-    console.log(
-      '🚀 ~ file: user.controller.ts:36 ~ UserController ~ profile ~ id',
-      id,
-    );
     return await this.userService.profile(id);
   }
 
